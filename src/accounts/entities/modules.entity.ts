@@ -2,15 +2,18 @@ import {
   BaseEntity,
   BeforeInsert,
   BeforeUpdate,
+  ChildEntity,
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  TableInheritance,
 } from 'typeorm';
 
 @Entity()
+@TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export abstract class AbstractModule extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -27,13 +30,13 @@ export abstract class AbstractModule extends BaseEntity {
   }
 }
 
-@Entity()
+@ChildEntity()
 export class Module extends AbstractModule {
   @OneToMany(() => SubModule, (subModule) => subModule.parent)
   subModules: SubModule[];
 }
 
-@Entity()
+@ChildEntity()
 export class SubModule extends AbstractModule {
   @ManyToOne(() => Module, (module) => module.subModules, {
     onDelete: 'SET NULL',

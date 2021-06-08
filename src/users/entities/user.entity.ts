@@ -1,8 +1,8 @@
 import {
   BeforeInsert,
   BeforeUpdate,
+  ChildEntity,
   Column,
-  Entity,
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
@@ -13,7 +13,7 @@ import { Role } from 'src/rbac/entities/roles.entity';
 
 const saltOrRounds = SALT_OR_ROUNDS;
 
-@Entity()
+@ChildEntity()
 export class User extends AbstractUser {
   @Column()
   username: string;

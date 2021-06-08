@@ -14,6 +14,7 @@ export const databaseProviders = [
         database: process.env.DB_SCHEMA,
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging: false,
       }),
   },
 ];
