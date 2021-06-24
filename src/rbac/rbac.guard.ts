@@ -28,10 +28,6 @@ export class RbacGuard implements CanActivate {
     op: Operation,
     role: Role,
   ): Promise<boolean> {
-    if (role.key === moduleName) {
-      return await this.checkIfAllowed(moduleName, op, role);
-    }
-
-    return false;
+    return await this.service.matchRolePermission(moduleName, op, role.key);
   }
 }

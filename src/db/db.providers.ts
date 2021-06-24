@@ -1,20 +1,28 @@
+import { ConfigService } from '@nestjs/config';
 import { injectedConsts } from 'src/global.constants';
 import { createConnection } from 'typeorm';
 
 export const databaseProviders = [
   {
     provide: injectedConsts.DATABASE_CONNECTION,
-    useFactory: async () =>
-      await createConnection({
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => {
+      const dbSync: boolean =
+        configService.get<string>('DB_SYNC', 'false') === 'true';
+      const dblogging: boolean =
+        configService.get<string>('DB_LOGGING', 'false') === 'true';
+
+      return await createConnection({
         type: 'mysql',
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT as unknown as number,
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_SCHEMA,
+        host: configService.get('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get('DB_USER'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_SCHEMA'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true,
-        logging: false,
-      }),
+        synchronize: dbSync,
+        logging: dblogging,
+      });
+    },
   },
 ];
