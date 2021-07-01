@@ -12,22 +12,22 @@ export class RbacGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const moduleName = this.reflector.get<string>(
-      'module',
+    const moduleKey = this.reflector.get<string>(
+      'moduleKey',
       context.getHandler(),
     );
     const op = this.reflector.get<Operation>('operation', context.getHandler());
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    return await this.checkIfAllowed(moduleName, op, user.role);
+    return await this.checkIfAllowed(moduleKey, op, user.role);
   }
 
   private async checkIfAllowed(
-    moduleName: string,
+    moduleKey: string,
     op: Operation,
     role: Role,
   ): Promise<boolean> {
-    return await this.service.matchRolePermission(moduleName, op, role.key);
+    return await this.service.matchRolePermission(moduleKey, op, role.key);
   }
 }
