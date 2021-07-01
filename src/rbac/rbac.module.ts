@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountsModule } from 'src/accounts/accounts.module';
-import { DbModule } from 'src/db/db.module';
-import { rbacProviders } from './rbac.providers';
+import { Role, RoleMap } from './entities/roles.entity';
 import { RbacService } from './rbac.service';
 
 @Module({
-  imports: [DbModule, AccountsModule],
-  providers: [RbacService, ...rbacProviders],
+  imports: [TypeOrmModule.forFeature([Role, RoleMap]), AccountsModule],
+  providers: [RbacService],
 })
 export class RbacModule {}

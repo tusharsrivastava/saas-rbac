@@ -1,17 +1,17 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { Module } from 'src/accounts/entities/modules.entity';
 import { Repository } from 'typeorm';
 import { Role, RoleMap } from './entities/roles.entity';
 import { Operation } from './rbac.enums';
-import { ROLE_MAP_REPOSITORY, ROLE_REPOSITORY } from './rbac.providers';
 
 @Injectable()
 export class RbacService {
   constructor(
-    @Inject(ROLE_REPOSITORY)
+    @InjectRepository(Role)
     private readonly roleRepo: Repository<Role>,
-    @Inject(ROLE_MAP_REPOSITORY)
+    @InjectRepository(RoleMap)
     private readonly rolemapRepo: Repository<RoleMap>,
     private readonly accountsService: AccountsService,
   ) {}
